@@ -7,23 +7,24 @@ import subway.views.lineviews.LineOutputView;
 
 import java.util.Scanner;
 
-public class LineDeleteService {
+public class LineDeleteService implements LineService{
     private static final String NOT_EXIST_LINE_MESSAGE = "\n[ERROR] 존재하지 않는 노선입니다.";
     private static final LineDeleteService lineDeleteService = new LineDeleteService();
 
     private LineDeleteService() {
     }
 
-    public static LineDeleteService getInstance() {
+    public static LineService getInstance() {
         return lineDeleteService;
     }
 
-    public void lineDeleteService(Scanner scanner) {
+    @Override
+    public void lineService(Scanner scanner) {
         try {
             String lineNameToDelete = makeLineNameToDelete(scanner);
             deleteLineFromRepository(lineNameToDelete);
         } catch (IllegalArgumentException e) {
-            LineService.goToMenu(e, scanner);
+            goToMenu(e, scanner);
         }
     }
 

@@ -1,26 +1,38 @@
 package subway.menus;
 
-import java.util.stream.Stream;
+import subway.service.lineservice.LineAddService;
+import subway.service.lineservice.LineDeleteService;
+import subway.service.lineservice.LineService;
+import subway.service.lineservice.LinesPrintService;
+
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.function.Supplier;
 
 public enum LineMenu {
-    LINE_ADD("1", "노선 등록"),
-    LINE_DELETE("2", "노선 삭제"),
-    LINE_SELECT("3", "노선 조회"),
-    GO_BACK_TO_MAIN_MENU("B", "돌아가기");
+    LINE_ADD("1", "노선 등록", () -> {
+        return LineAddService.lineService();
+    }),
+    LINE_DELETE("2", "노선 삭제", LineDeleteService::getInstance),
+    LINE_SELECT("3", "노선 조회", LinesPrintService::getInstance),
+    GO_BACK_TO_MAIN_MENU("B", "돌아가기", () -> {return null;});
 
     private final String option;
     private final String description;
+    private final Supplier<LineService> run;
 
-    LineMenu(String option, String description) {
+    LineMenu(String option, String description, Supplier<LineService> runToMethod) {
         this.option = option;
         this.description = description;
+        this.run = runToMethod;
     }
 
-    public static LineMenu getMenu(String input) {
-        return Stream.of(LineMenu.values())
-            .filter(lineMenu -> lineMenu.option.equals(input))
+    public static void execute(Scanner scanner, String lineMenu) {
+        Arrays.stream(values())
+            .filter(value -> value.option.equals(lineMenu))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(MenuConstant.NOT_EXIST_MENU_EXCEPTION_MESSAGE));
+            .orElseThrow(() -> new IllegalArgumentException("그런거 없습니다."))
+            .run.get().lineService(scanner);
     }
 
     @Override

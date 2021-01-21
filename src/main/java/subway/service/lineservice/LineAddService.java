@@ -9,7 +9,7 @@ import subway.views.lineviews.LineOutputView;
 
 import java.util.Scanner;
 
-public class LineAddService {
+public class LineAddService implements LineService{
     private static final String DUPLICATED_LINE_NAME_MESSAGE = "\n[ERROR] 해당 노선은 이미 등록되었습니다.";
     private static final String UPWARD_AND_DOWNWARD_IS_SAME_MESSAGE = "\n[ERROR] 상행 종점역과 " +
         "하행 종점역은 같게 입력할 수 없습니다.";
@@ -19,10 +19,12 @@ public class LineAddService {
     private LineAddService() {
     }
 
-    public static LineAddService getInstance() {
+    public static LineService getInstance() {
         return lineAddService;
     }
-    public void lineAddService(Scanner scanner) {
+
+    @Override
+    public void lineService(Scanner scanner) {
         try {
             Line newLine = makeLineToAdd(scanner);
             LineOutputView.printUpwardEndToAddMessage();
@@ -33,7 +35,7 @@ public class LineAddService {
             putStationIntoLine(newLine, upwardEndStation, downwardEndStation);
             addLineToRepository(newLine);
         } catch (IllegalArgumentException e) {
-            LineService.goToMenu(e, scanner);
+            goToMenu(e, scanner);
         }
     }
 

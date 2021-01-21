@@ -4,13 +4,13 @@ import subway.controller.LineMenuController;
 
 import java.util.Scanner;
 
-public class LineService {
-    private LineService() {
-    }
+public interface LineService {
 
-    static void goToMenu(IllegalArgumentException e, Scanner scanner) {
+    default void goToMenu(IllegalArgumentException e, Scanner scanner) {
         System.out.println(e.getMessage());
         LineMenuController lineMenuController = LineMenuController.getInstance();
         lineMenuController.mappingMenu(scanner);
     }
+
+    void lineService(Scanner scanner);
 }
